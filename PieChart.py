@@ -1,46 +1,39 @@
 import math
 
 class PieChart:
-    def __init__(self, *, radius: int, percentages: tuple, catagories: tuple = (), keys: tuple[str] = ('#', '*', '!', '&', ';', '%', ':', '@', '.', '$', ',', '?', '>', '<', '+', '-', '=', '^', '~', '`', '|', '\\', '/') ) -> None: # Initialize the PieChart object (dunder method) (catagories is optional ie a default value of an empty list)
+    def __init__(self, *, radius: int = 15, data: dict[str, float] = 0, order: int = 1, keys: tuple[str] = ('#', '*', '!', '&', ';', '%', ':', '@', '.', '$', ',', '?', '>', '<', '+', '-', '=', '^', '~', '`', '|', '\\', '/') ) -> None: # (dunder method)
+        '''
+        radius: int - the radius of the circle
+        percentages: tuple - the percentages of the catagories
+        catagories: tuple - the catagories of the pie chart (has default value of an empty tuple)
+        keys: tuple - the keys for the catagories (has default keys)
+        '''
         try:
-            assert len(catagories) <= len(percentages)
-            assert sum(percentages) <= 1
-            assert len(percentages) > 0
-            assert radius > 0
+            assert isinstance(data, dict), "Values must be a dictionary"
+            assert len(data) > 0, "Values must have at least one value"
+            assert radius > 0, "Radius must be greater than 0"
 
-        except AssertionError:
-            if len(catagories) > len(percentages):
-                print("The number of percentages must be less than or equal to the number of catagories")
-            if sum(percentages) > 1:
-                print("The sum of the percentages must be less than or equal to 1")
-            if len(percentages) == 0:
-                print("There must be at least one percentage")
-            if radius <= 0:
-                print("The radius must be greater than 0")
+        except AssertionError as e:
+            print(e)
             exit()
         
         else:
             self.keys: tuple[str] = keys
             self.radius: int = radius
-            self.catagories: list[str] = list(catagories) # Save the catagories list
-            self.raw_percentages: list[float] = list(percentages) # Save the raw percentages for the catagories list
-            self.percentages = [0]
+            self.raw_data: dict[str, float] = data
+            
+            dum: list[float] = [data[i]/sum(data.values()) for i in data] # convert to percentages
+            dum = [sum(dum[:i+1]) for i in range(len(dum))] # cumulative sum
+            
+            self.percentages: dict[str, float] = {list(data.keys())[i]: dum[i] for i in range(len(dum))}
 
-            if sum(self.raw_percentages) < 1: # Add a placeholder for the missing percentage
-                self.raw_percentages.append(1 - sum(self.raw_percentages)) 
 
-            for i in range(len(percentages)): # Calculate the percentages
-                self.percentages.append(round(self.percentages[i] + percentages[i], ndigits=2))
-
-            if (self.percentages[-1] != 1): # Check if the percentages add up to 1 (just in case)
-                self.percentages.append(1)
-
-            if len(self.catagories) < len(self.percentages) - 1: # Placeholder for missing catagories
-                for i in range(len(self.catagories), len(self.percentages) - 2):
-                    self.catagories.append("<<Placeholder>>")
-                # print(self.percentages)
-
-    def __calc_percentage(self, x: int, y: int) -> float: # Calculate percentage that the pixel corresponds to ('__' means private method)
+    def __calc_percentage(self, x: int, y: int) -> float: #  ('__' means private method)
+        '''
+        Calculate percentage that the pixel corresponds to.
+        x: int - x coordinate
+        y: int - y coordinate
+        '''
         if x == 0 and y < 0: # 270 degrees
             return 0.5
 
@@ -50,27 +43,44 @@ class PieChart:
             p = 0.5 + p
         return p
 
-    def __color_pixel(self, x: int, y: int, val: list) -> None: # Assign a color to the pixel ('__' means private method)
+    def __color_pixel(self, x: int, y: int) -> None: # ('__' means private method)
+        '''
+        Color the pixel based on the percentage it corresponds to.
+        x: int - x coordinate
+        y: int - y coordinate
+        '''
+        values = [0] + list(self.percentages.values())
         p = self.__calc_percentage(x, y)
-        for i in range(1,len(val)):
-            if p >= val[i - 1] and p < val[i]:
+        for i in range(1, len(values)):
+            if p >= values[i - 1] and p < values[i]:
                 return (f"{self.keys[i-1] * 2}")
         return ('  ')
     
     def __str__(self) -> str: # Create the pie chart (dunder method)
+        '''
+        Create the pie chart.
+        '''
         chart = ""
-        for x in range(-self.radius, self.radius + 1): # execute for every pixel in the circle
-            for y in range(-self.radius, self.radius + 1):
-                if x ** 2 + y ** 2 <= self.radius ** 2: # circle equation
-                    chart += self.__color_pixel(x, y, self.percentages)
+        for y in range(-self.radius, self.radius):
+            for x in range(-self.radius, self.radius):
+                if x ** 2 + y ** 2 <= self.radius ** 2:
+                    chart += self.__color_pixel(x, y)
                 else:
-                    chart += '  '
-            chart += '\n'
-        
-        if self.catagories:
-            chart += '\n\n'
-            for i in range(len(self.catagories)):
-                chart += f"[{self.keys[i]}] {self.catagories[i]} : {self.raw_percentages[i] * 100 :.0f}%\n"
+                    chart += "  "
+            chart += "\n"
+
+        chart += '\n\n'
+        chart += "Legend:\n"
+        total = sum(self.raw_data.values())
+        print(total)
+
+        for k, v in self.raw_data.items():
+            chart += f"{k} : {v} || {v/total:.0f}%\n"
+
+
+        # something : <value> || <percent>
+
+
         return chart
     
     def __repr__(self) -> str: # Return the string representation of the object (dunder method)
@@ -86,7 +96,8 @@ class LineGraph:
 
 
 if __name__ == "__main__":
-    a = PieChart( radius = 20, percentages = [.2,.2,.2,.2,.2] )
+    d = {'a': 1, 'b': 1, 'c': 1, 'd': 1, 'e': 1}
+    a = PieChart( data = d )
     print(a)
 
 # TODO
