@@ -72,14 +72,9 @@ class PieChart:
         chart += '\n\n'
         chart += "Legend:\n"
         total = sum(self.raw_data.values())
-        print(total)
 
         for k, v in self.raw_data.items():
-            chart += f"{k} : {v} || {v/total:.0f}%\n"
-
-
-        # something : <value> || <percent>
-
+            chart += f"{k} : {v} || {v / total * 100:.0f}%\n"
 
         return chart
     
@@ -105,4 +100,3 @@ if __name__ == "__main__":
 # - add new graphs
 # - add key input
 # - change to raw value input
-# - change to support dictionary or list input by default
