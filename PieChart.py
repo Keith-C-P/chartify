@@ -3,15 +3,18 @@ import math
 class PieChart:
     def __init__(self, *, radius: int = 15, data: dict[str, float] = 0, order: int = 1, keys: tuple[str] = ('#', '*', '!', '&', ';', '%', ':', '@', '.', '$', ',', '?', '>', '<', '+', '-', '=', '^', '~', '`', '|', '\\', '/') ) -> None: # (dunder method)
         '''
-        radius: int - the radius of the circle
-        percentages: tuple - the percentages of the catagories
-        catagories: tuple - the catagories of the pie chart (has default value of an empty tuple)
-        keys: tuple - the keys for the catagories (has default keys)
+        Create a pie chart.
+        radius: int - radius of the pie chart
+        data: dict - data to be represented in the pie chart
+        keys: tuple - keys to represent the data
         '''
         try:
             assert isinstance(data, dict), "Values must be a dictionary"
+            assert isinstance(order, int), "Order must be an integer"
+            assert isinstance(keys, tuple), "Keys must be a tuple"
             assert len(data) > 0, "Values must have at least one value"
             assert radius > 0, "Radius must be greater than 0"
+            assert order in [-1, 0, 1], "Order must be -1 or 0 or 1"
 
         except AssertionError as e:
             print(e)
@@ -98,5 +101,5 @@ if __name__ == "__main__":
 # TODO
 # - add random to graph keys
 # - add new graphs
-# - add key input
-# - change to raw value input
+# - add order customization
+# - add key customization
