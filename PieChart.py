@@ -1,7 +1,12 @@
 import math
 
 class PieChart:
-    def __init__(self, *, radius: int = 15, data: dict[str, float] = 0, order: int = 1, keys: tuple[str] = ('#', '*', '!', '&', ';', '%', ':', '@', '.', '$', ',', '?', '>', '<', '+', '-', '=', '^', '~', '`', '|', '\\', '/') ) -> None: # (dunder method)
+    def __init__(self, *, radius: int = 15,
+                 data: dict[str, float] = 0,
+                 order: int = 1,
+                 keys: tuple[str] = ('#', '*', '!', '&', ';', '%', ':', '@', '.', 
+                                     '$', ',', '?', '>', '<', '+', '-', '=', '^', 
+                                     '~', '`', '|', '\\', '/') ) -> None:
         '''
         Create a pie chart.
         radius: int - radius of the pie chart
@@ -15,6 +20,7 @@ class PieChart:
             assert len(data) > 0, "Values must have at least one value"
             assert radius > 0, "Radius must be greater than 0"
             assert order in [-1, 0, 1], "Order must be -1 or 0 or 1"
+            assert len(keys) >= len(data), "Not enough keys for the data provided"
 
         except AssertionError as e:
             print(e)
@@ -30,8 +36,7 @@ class PieChart:
             
             self.percentages: dict[str, float] = {list(data.keys())[i]: dum[i] for i in range(len(dum))}
 
-
-    def __calc_percentage(self, x: int, y: int) -> float: #  ('__' means private method)
+    def __calc_percentage(self, x: int, y: int) -> float:
         '''
         Calculate percentage that the pixel corresponds to.
         x: int - x coordinate
@@ -46,7 +51,7 @@ class PieChart:
             p = 0.5 + p
         return p
 
-    def __color_pixel(self, x: int, y: int) -> None: # ('__' means private method)
+    def __color_pixel(self, x: int, y: int) -> None: 
         '''
         Color the pixel based on the percentage it corresponds to.
         x: int - x coordinate
@@ -56,12 +61,27 @@ class PieChart:
         p = self.__calc_percentage(x, y)
         for i in range(1, len(values)):
             if p >= values[i - 1] and p < values[i]:
-                return (f"{self.keys[i-1] * 2}")
+                return (f"{self.keys[i - 1] * 2}")
         return ('  ')
     
-    def __str__(self) -> str: # Create the pie chart (dunder method)
+    def __legend(self) -> str:
         '''
-        Create the pie chart.
+        Create the legend for the pie chart.
+        '''
+        legend = "Legend:\n"
+        lKey = max([len(key) for key in self.raw_data])
+        lVal = max([len(str(i)) for i in self.raw_data.values()])
+
+        i = 0
+        for k, v in self.raw_data.items():
+            legend += f"[{self.keys[i]}] {k} {' ' * (lKey - len(k))}- {v}\n"
+            i += 1
+        return legend
+
+    
+    def __str__(self) -> str:
+        '''
+        Create the pie chart with legend.
         '''
         chart = ""
         for y in range(-self.radius, self.radius):
@@ -73,15 +93,11 @@ class PieChart:
             chart += "\n"
 
         chart += '\n\n'
-        chart += "Legend:\n"
-        total = sum(self.raw_data.values())
-
-        for k, v in self.raw_data.items():
-            chart += f"{k} : {v} || {v / total * 100:.0f}%\n"
+        chart += self.__legend()
 
         return chart
     
-    def __repr__(self) -> str: # Return the string representation of the object (dunder method)
+    def __repr__(self) -> str: # Return the string representation of the object
         return (f"Radius: {self.radius}, Percentages: {self.raw_percentages}, Catagories: {self.catagories}")
     
 class BarChart:
@@ -92,7 +108,6 @@ class LineGraph:
     def __init__():
         pass
 
-
 if __name__ == "__main__":
     d = {'a': 1, 'b': 1, 'c': 1, 'd': 1, 'e': 1}
     a = PieChart( data = d )
@@ -102,4 +117,4 @@ if __name__ == "__main__":
 # - add random to graph keys
 # - add new graphs
 # - add order customization
-# - add key customization
+# - add color customization
