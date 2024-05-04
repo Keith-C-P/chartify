@@ -3,20 +3,25 @@ import math
 class PieChart:
     def __init__(self, *, radius: int = 15,
                  data: dict[str, float] = 0,
-                 order: int = 1,
+                 reverse: bool = None,
                  keys: tuple[str] = ('#', '*', '!', '&', ';', '%', ':', '@', '.', 
                                      '$', ',', '?', '>', '<', '+', '-', '=', '^', 
                                      '~', '`', '|', '\\', '/'), 
                  gamerMode: bool = False) -> None:
         '''
         Create a pie chart.
-        radius: int - radius of the pie chart
-        data: dict - data to be represented in the pie chart
-        keys: tuple - keys to represent the data
+        radius: int
+         radius of the pie chart
+        data: dict
+         data to be represented in the pie chart
+        order: int 
+         order of the pie chart (-1 : descending, 0 : no order, 1 : ascending)
+        keys: tuple
+          keys to represent the data
         '''
         try:
-            assert isinstance(data, dict), "Values must be a dictionary"
-            assert isinstance(order, int), "Order must be an integer"
+            assert isinstance(data, dict), "Data must be a dictionary"
+            assert isinstance(reverse, bool) or reverse == None, "reverse must be a boolean or None"
             assert isinstance(keys, tuple), "Keys must be a tuple"
             assert isinstance(radius, int), "Radius must be an integer"
             assert isinstance(gamerMode, bool), "gamerMode must be a boolean"
@@ -24,7 +29,6 @@ class PieChart:
             assert all(isinstance(key, (int,float)) for key in data.values()), "Values must be integers or floats"
             assert len(data) > 0, "Values must have at least one value"
             assert radius > 0, "Radius must be greater than 0"
-            assert order in [-1, 0, 1], "Order must be -1 or 0 or 1"
             assert len(keys) >= len(data), "Not enough keys for the data provided"
 
         except AssertionError as e:
@@ -37,7 +41,12 @@ class PieChart:
             self.raw_data: dict[str, float] = data
             self.gamerMode: bool = gamerMode
             
-            dum: list[float] = [data[i]/sum(data.values()) for i in data] # convert to percentages
+            if reverse == False:
+                self.raw_data = {k: v for k, v in sorted(self.raw_data.items(), key=lambda item: item[1], reverse=False)}
+            elif reverse == True:
+                self.raw_data = {k: v for k, v in sorted(self.raw_data.items(), key=lambda item: item[1], reverse=True)}
+                
+            dum: list[float] = [self.raw_data[i]/sum(self.raw_data.values()) for i in data] # convert to percentages
             dum = [sum(dum[:i+1]) for i in range(len(dum))] # cumulative sum
             
             self.color: list[str] = []
@@ -45,14 +54,18 @@ class PieChart:
                 self.color = [self.__huetoRGB(i/len(dum)) for i in range(len(dum))]
                 self.color = [self.__huetoRGB(0)] + self.color
 
+
+
             self.percentages: dict[str, float] = {list(data.keys())[i]: dum[i] for i in range(len(dum))}
 
 
     def __calc_percentage(self, x: int, y: int) -> float:
         '''
         Calculate percentage that the pixel corresponds to.
-        x: int - x coordinate
-        y: int - y coordinate
+        x: int
+         x coordinate
+        y: int
+         y coordinate
         '''
         if x == 0 and y < 0: # 270 degrees
             return 0.5
@@ -66,7 +79,8 @@ class PieChart:
     def __huetoRGB(self, p: float) -> str:
         '''
         Convert hue to RGB.
-        p: float - percentage
+        p: float
+         percentage
         '''
         q = 1 - p
         r, g, b = 0, 0, 0
@@ -94,8 +108,10 @@ class PieChart:
     def __color_pixel(self, x: int, y: int) -> None: 
         '''
         Color the pixel based on the percentage it corresponds to.
-        x: int - x coordinate
-        y: int - y coordinate
+        x: int 
+         x coordinate
+        y: int 
+         y coordinate
         '''
         values = [0] + list(self.percentages.values())
         p = self.__calc_percentage(x, y)
