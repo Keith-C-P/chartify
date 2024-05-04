@@ -6,7 +6,8 @@ class PieChart:
                  order: int = 1,
                  keys: tuple[str] = ('#', '*', '!', '&', ';', '%', ':', '@', '.', 
                                      '$', ',', '?', '>', '<', '+', '-', '=', '^', 
-                                     '~', '`', '|', '\\', '/') ) -> None:
+                                     '~', '`', '|', '\\', '/'), 
+                 gamerMode: bool = False) -> None:
         '''
         Create a pie chart.
         radius: int - radius of the pie chart
@@ -17,6 +18,8 @@ class PieChart:
             assert isinstance(data, dict), "Values must be a dictionary"
             assert isinstance(order, int), "Order must be an integer"
             assert isinstance(keys, tuple), "Keys must be a tuple"
+            assert isinstance(radius, int), "Radius must be an integer"
+            assert isinstance(gamerMode, bool), "Coloured must be a boolean"
             assert len(data) > 0, "Values must have at least one value"
             assert radius > 0, "Radius must be greater than 0"
             assert order in [-1, 0, 1], "Order must be -1 or 0 or 1"
@@ -30,11 +33,18 @@ class PieChart:
             self.keys: tuple[str] = keys
             self.radius: int = radius
             self.raw_data: dict[str, float] = data
+            self.gamerMode: bool = gamerMode
             
             dum: list[float] = [data[i]/sum(data.values()) for i in data] # convert to percentages
             dum = [sum(dum[:i+1]) for i in range(len(dum))] # cumulative sum
             
+            self.color: list[str] = []
+            if gamerMode:
+                self.color = [self.__huetoRGB(i/len(dum)) for i in range(len(dum))]
+                self.color = [self.__huetoRGB(0)] + self.color
+
             self.percentages: dict[str, float] = {list(data.keys())[i]: dum[i] for i in range(len(dum))}
+
 
     def __calc_percentage(self, x: int, y: int) -> float:
         '''
@@ -50,6 +60,34 @@ class PieChart:
         if x < 0:
             p = 0.5 + p
         return p
+    
+    def __huetoRGB(self, p: float) -> str:
+        '''
+        Convert hue to RGB.
+        p: float - percentage
+        '''
+        q = 1 - p
+        r, g, b = 0, 0, 0
+        if p < 1/6:
+            r = 1
+            g = p * 6
+        elif p < 1/3:
+            r = q * 6
+            g = 1
+        elif p < 1/2:
+            g = 1
+            b = (p - 1/3) * 6
+        elif p < 2/3:
+            g = q * 6
+            b = 1
+        elif p < 5/6:
+            r = (p - 2/3) * 6
+            b = 1
+        else:
+            r = 1
+            b = q * 6
+
+        return (f"\u001b[38;2;{int(r * 255)};{int(g * 255)};{int(b * 255)}m")
 
     def __color_pixel(self, x: int, y: int) -> None: 
         '''
@@ -61,20 +99,19 @@ class PieChart:
         p = self.__calc_percentage(x, y)
         for i in range(1, len(values)):
             if p >= values[i - 1] and p < values[i]:
-                return (f"{self.keys[i - 1] * 2}")
+                return f"{self.color[i - 1]}{self.keys[i - 1] * 2}\u001b[0m" if self.gamerMode else f"{self.keys[i - 1] * 2}"
         return ('  ')
     
     def __legend(self) -> str:
         '''
         Create the legend for the pie chart.
         '''
-        legend = "Legend:\n"
+        legend = "Legend:\n" if not self.gamerMode else ''.join([f"{self.__huetoRGB( j / len( list( 'RGB Gamer Legend:' ) ) )}{i}\u001b[0m" for j,i in enumerate(list('RGB Gamer Legend:'))]) + "\n" # for rgb gamerMode legend
         lKey = max([len(key) for key in self.raw_data])
-        lVal = max([len(str(i)) for i in self.raw_data.values()])
 
         i = 0
         for k, v in self.raw_data.items():
-            legend += f"[{self.keys[i]}] {k} {' ' * (lKey - len(k))}- {v}\n"
+            legend += f"[{self.keys[i]}] {k} {' ' * (lKey - len(k))}- {v}\n" if not self.gamerMode else f"{self.color[i]}[{self.keys[i]}] {k} {' ' * (lKey - len(k))}- {v}\u001b[0m\n"
             i += 1
         return legend
 
@@ -111,6 +148,7 @@ class LineGraph:
 if __name__ == "__main__":
     d = {'a': 1, 'b': 1, 'c': 1, 'd': 1, 'e': 1}
     a = PieChart( data = d )
+    # print("\u001b[38;2;{r};{g};{b}m Hello, world! \u001b[0m")
     print(a)
 
 # TODO
