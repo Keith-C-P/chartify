@@ -16,7 +16,7 @@ A Python Library that provides tools to print Charts in the terminal
 ```python
 from chartify import PieChart
 
-data = {'': 1, 'b': 1, 'c': 1, 'd': 1, 'e': 1}
+data = {'a': 1, 'b': 1, 'c': 1, 'd': 1, 'e': 1}
 pie = PieChart(data = data)
 print(pie)
 
