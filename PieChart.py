@@ -52,9 +52,6 @@ class PieChart:
             self.color: list[str] = []
             if gamerMode:
                 self.color = [self.__huetoRGB(i/len(dum)) for i in range(len(dum))]
-                self.color = [self.__huetoRGB(0)] + self.color
-
-
 
             self.percentages: dict[str, float] = {list(data.keys())[i]: dum[i] for i in range(len(dum))}
 
@@ -165,12 +162,10 @@ class LineGraph:
 
 if __name__ == "__main__":
     d = {'a': 1, 'b': 1, 'c': 1, 'd': 1, 'e': 1}
-    a = PieChart( data = d )
+    a = PieChart( data = d , gamerMode=True)
     # print("\u001b[38;2;{r};{g};{b}m Hello, world! \u001b[0m")
     print(a)
 
 # TODO
 # - add random to graph keys
 # - add new graphs
-# - add order customization
-# - add color customization
