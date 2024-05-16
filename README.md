@@ -3,7 +3,7 @@
 
 A Python Library that provides tools to print Charts in the terminal
 
-## Usage/Examples
+# Usage/Examples
 
 1 - Clone the repo into your working directory
 
@@ -65,16 +65,43 @@ RGB Gamer Legend:
 
 ```
 
-## Features
+# Features
 
-data: dict[] - enter the data of the piechart 
 
-radius: int (optional) - change the radius of the chart (default = 15)
+## data: dict[str, int]
+Enter the data of the piechart
 
-keys: tuple() =  (optional) - list of keys that the chart will use instead of default (default = (ASCII characters) )
+- Default value: `None`
+- Allowed Options: `dict[str, int]`
+- Optional: `YES`
 
+## radius: int
+Change the radius of the chart
+
+- Default value: `15`
+- Allowed Options: `integer`
+- Optional: `YES`
+
+## keys: tuple [str]
+List of keys that the chart will use instead of default
 (if the chart needs more keys than default provide your own keys)
 
-gamerMode: bool (optional) - print the chart in multicolor to make it more readeable 
+- Default value: `'#', '*', '!', '&', ';', '%', ':', '@', '.', 
+                  '$', ',', '?', '>', '<', '+', '-', '=', '^', 
+                  '~', '\`', '|', '\\', '/'`
+- Allowed Options: `tuple(str)`
+- Optional: `YES`
 
-ascending: bool/None (optional) - order your dictionary data in ascending (True) or descending (False) (default = None (no ordering)) 
+gamerMode: bool 
+Print the chart in multicolor to make it more readeable 
+
+- Default value: `False`
+- Allowed Options: `True, False`
+- Optional: `YES`
+
+ascending: bool/None
+Order your dictionary data in ascending (True) or descending (False)
+
+- Default value: `None`
+- Allowed Options: `True`, `False`, `None`
+- Optional: `YES`
