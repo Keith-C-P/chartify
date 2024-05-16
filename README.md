@@ -69,21 +69,21 @@ RGB Gamer Legend:
 
 ## Keyword Arguments
 
-### data: dict[str, int]
+### data: `dict[str, int]`
 Enter the data of the piechart
 
 - Default value: `None`
 - Allowed Options: `dict[str, int]`
 - Optional: `YES`
 
-### radius: int
+### radius: `int`
 Change the radius of the chart
 
 - Default value: `15`
-- Allowed Options: `integer`
+- Allowed Options: `int`
 - Optional: `YES`
 
-### keys: tuple[str]
+### keys: `tuple[str]`
 List of keys that the chart will use instead of default
 (if the chart needs more keys than default provide your own keys)
 
@@ -91,18 +91,18 @@ List of keys that the chart will use instead of default
 - Allowed Options: `tuple(str)`
 - Optional: `YES`
 
-### gamerMode: bool 
+### gamerMode: `bool`
 Print the chart in multicolor to make it more readeable 
 
 - Default value: `False`
 - Allowed Options: `True, False`
 - Optional: `YES`
 
-### ascending: bool/None
+### ascending: `bool`, `None`
 Order your data by value 
-1. Ascending -> True
-2. Descending -> False
-3. Input order -> None
+1. Ascending -> `True`
+2. Descending -> `False`
+3. Input order -> `None`
 
 - Default value: `None`
 - Allowed Options: `True`, `False`, `None`
