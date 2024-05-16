@@ -88,7 +88,7 @@ List of keys that the chart will use instead of default
 (if the chart needs more keys than default provide your own keys)
 
 - Default value: ```('#', '*', '!', '&', ';', '%', ':', '@', '.', '$', ',', '?', '>', '<', '+', '-', '=', '^', '~', '`', '|', '\', '/')```
-- Allowed Options: `tuple(str)`
+- Allowed Options: `tuple[str]`
 - Optional: `YES`
 
 ### gamerMode: `bool`
