@@ -82,7 +82,7 @@ Change the radius of the chart
 - Allowed Options: `integer`
 - Optional: `YES`
 
-## keys: tuple [str]
+## keys: tuple[str]
 List of keys that the chart will use instead of default
 (if the chart needs more keys than default provide your own keys)
 
@@ -92,14 +92,14 @@ List of keys that the chart will use instead of default
 - Allowed Options: `tuple(str)`
 - Optional: `YES`
 
-gamerMode: bool 
+## gamerMode: bool 
 Print the chart in multicolor to make it more readeable 
 
 - Default value: `False`
 - Allowed Options: `True, False`
 - Optional: `YES`
 
-ascending: bool/None
+## ascending: bool/None
 Order your dictionary data in ascending (True) or descending (False)
 
 - Default value: `None`
