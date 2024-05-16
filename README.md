@@ -99,7 +99,10 @@ Print the chart in multicolor to make it more readeable
 - Optional: `YES`
 
 ### ascending: bool/None
-Order your dictionary data in ascending (True) or descending (False)
+Order your data by value 
+1. Ascending -> True
+2. Descending -> False
+3. Input order -> None
 
 - Default value: `None`
 - Allowed Options: `True`, `False`, `None`
