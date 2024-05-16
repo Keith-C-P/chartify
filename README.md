@@ -71,7 +71,7 @@ data: dict[] - enter the data of the piechart
 
 radius: int (optional) - change the radius of the chart (default = 15)
 
-keys: tuple() =  (optional) - list of keys that the chart will use instead of default (defalt = <a tuple of ascii charecters> )
+keys: tuple() =  (optional) - list of keys that the chart will use instead of default (default = (ASCII charecters) )
 
 (if the chart needs more keys than default provide your own keys)
 
