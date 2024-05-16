@@ -21,6 +21,8 @@ print(pie)
 ```
 
 This should give an output like this
+<details>
+<summary> PieChart </summary>
 
 ```
                               &&                              
@@ -64,10 +66,13 @@ RGB Gamer Legend:
 [;] e - 5
 
 ```
+</details>
 
 # Features
 
-## Keyword Arguments
+<details>
+
+<summary> Keyword Arguments </summary>
 
 ### data: `dict[str, int]`
 Enter the data of the piechart
@@ -107,3 +112,4 @@ Order your data by value
 - Default value: `None`
 - Allowed Options: `True`, `False`, `None`
 - Optional: `YES`
+<\details>
