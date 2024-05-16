@@ -1,22 +1,23 @@
 import math
 
 class PieChart:
-    def __init__(self, *, radius: int = 15,
-                 data: dict[str, float] = 0,
-                 ascending: bool = None,
-                 keys: tuple[str] = ('#', '*', '!', '&', ';', '%', ':', '@', '.', 
-                                     '$', ',', '?', '>', '<', '+', '-', '=', '^', 
-                                     '~', '`', '|', '\\', '/'), 
+    def __init__(self, *, 
+                 radius:    int              = 15,
+                 data:      dict[str, float] = None,
+                 ascending: bool             = None,
+                 keys:      tuple[str]       = ('#', '*', '!', '&', ';', '%', ':', '@', '.', 
+                                                '$', ',', '?', '>', '<', '+', '-', '=', '^', 
+                                                '~', '`', '|', '\\', '/'), 
                  gamerMode: bool = False) -> None:
         '''
         Create a pie chart.
         radius: int
          radius of the pie chart
-        data: dict
+        data: dict(str, float)
          data to be represented in the pie chart
         order: int 
          order of the pie chart (-1 : descending, 0 : no order, 1 : ascending)
-        keys: tuple
+        keys: tuple(str)
           keys to represent the data
         '''
         try:
