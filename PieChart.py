@@ -3,7 +3,7 @@ import math
 class PieChart:
     def __init__(self, *, radius: int = 15,
                  data: dict[str, float] = 0,
-                 reverse: bool = None,
+                 ascending: bool = None,
                  keys: tuple[str] = ('#', '*', '!', '&', ';', '%', ':', '@', '.', 
                                      '$', ',', '?', '>', '<', '+', '-', '=', '^', 
                                      '~', '`', '|', '\\', '/'), 
@@ -21,7 +21,7 @@ class PieChart:
         '''
         try:
             assert isinstance(data, dict), "Data must be a dictionary"
-            assert isinstance(reverse, bool) or reverse == None, "reverse must be a boolean or None"
+            assert isinstance(ascending, bool) or ascending == None, "ascending must be a boolean or None"
             assert isinstance(keys, tuple), "Keys must be a tuple"
             assert isinstance(radius, int), "Radius must be an integer"
             assert isinstance(gamerMode, bool), "gamerMode must be a boolean"
@@ -41,12 +41,18 @@ class PieChart:
             self.raw_data: dict[str, float] = data
             self.gamerMode: bool = gamerMode
             
-            if reverse == False:
-                self.raw_data = {k: v for k, v in sorted(self.raw_data.items(), key=lambda item: item[1], reverse=False)}
-            elif reverse == True:
-                self.raw_data = {k: v for k, v in sorted(self.raw_data.items(), key=lambda item: item[1], reverse=True)}
-                
-            dum: list[float] = [self.raw_data[i]/sum(self.raw_data.values()) for i in data] # convert to percentages
+            if ascending == True:
+                self.raw_data = {k: v for k, v in sorted(self.raw_data.items(), key=lambda item: item[1], reverse = False)}
+            elif ascending == False:
+                self.raw_data = {k: v for k, v in sorted(self.raw_data.items(), key=lambda item: item[1], reverse = True)}
+
+            # print(self.raw_data)
+            # print(self.raw_data.values())
+
+            # for i in self.raw_data:
+            #     print(i)
+
+            dum: list[float] = [value/sum(self.raw_data.values()) for value in self.raw_data.values()] # convert to percentages
             dum = [sum(dum[:i+1]) for i in range(len(dum))] # cumulative sum
             
             self.color: list[str] = []
@@ -121,12 +127,16 @@ class PieChart:
         '''
         Create the legend for the pie chart.
         '''
-        legend = "Legend:\n" if not self.gamerMode else ''.join([f"{self.__huetoRGB( j / len( list( 'RGB Gamer Legend:' ) ) )}{i}\u001b[0m" for j,i in enumerate(list('RGB Gamer Legend:'))]) + "\n" # for rgb gamerMode legend
+        if self.gamerMode:
+            legend = ''.join([f"{self.__huetoRGB( j / len( list( 'RGB Gamer Legend:' ) ) )}{i}\u001b[0m" for j, i in enumerate(list('RGB Gamer Legend:'))]) + "\n"
+        else:
+            legend = "Legend:\n"
+
         lKey = max([len(key) for key in self.raw_data])
 
         i = 0
         for k, v in self.raw_data.items():
-            legend += f"[{self.keys[i]}] {k} {' ' * (lKey - len(k))}- {v}\n" if not self.gamerMode else f"{self.color[i]}[{self.keys[i]}] {k} {' ' * (lKey - len(k))}- {v}\u001b[0m\n"
+            legend += f"[{self.keys[i]}] {k} {' ' * (lKey - len(k))}- {v:_}\n" if not self.gamerMode else f"{self.color[i]}[{self.keys[i]}] {k} {' ' * (lKey - len(k))}- {v:_}\u001b[0m\n"
             i += 1
         return legend
 
@@ -136,8 +146,8 @@ class PieChart:
         Create the pie chart with legend.
         '''
         chart = ""
-        for y in range(-self.radius, self.radius):
-            for x in range(-self.radius, self.radius):
+        for y in range(-self.radius, self.radius + 1):
+            for x in range(-self.radius, self.radius + 1):
                 if x ** 2 + y ** 2 <= self.radius ** 2:
                     chart += self.__color_pixel(x, y)
                 else:
@@ -161,8 +171,8 @@ class LineGraph:
         pass
 
 if __name__ == "__main__":
-    d = {'a': 1, 'b': 1, 'c': 1, 'd': 1, 'e': 1}
-    a = PieChart( data = d , gamerMode=True)
+    d = {'a': 3, 'b': 1, 'c': 2, 'd': 4, 'e': 5}
+    a = PieChart( data = d , ascending = None, gamerMode= True)
     # print("\u001b[38;2;{r};{g};{b}m Hello, world! \u001b[0m")
     print(a)
 
