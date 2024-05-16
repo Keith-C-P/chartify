@@ -71,8 +71,9 @@ data: dict[] - enter the data of the piechart
 
 radius: int (optional) - change the radius of the chart (default = 15)
 
-keys: tuple() =  (optional) - list of keys that the chart will use instead of default (defalt = (a tuple of ascii charecters) )
-if the chart needs more keys than default provide your own keys
+keys: tuple() =  (optional) - list of keys that the chart will use instead of default (defalt = <a tuple of ascii charecters> )
+
+(if the chart needs more keys than default provide your own keys)
 
 gamerMode: bool (optional) - print the chart in multicolor to make it more readeable 
 
