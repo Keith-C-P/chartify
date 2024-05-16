@@ -74,7 +74,7 @@ Enter the data of the piechart
 
 - Default value: `None`
 - Allowed Options: `dict[str, int]`
-- Optional: `YES`
+- Optional: `NO`
 
 ### radius: `int`
 Change the radius of the chart
