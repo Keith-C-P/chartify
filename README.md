@@ -107,7 +107,7 @@ Print the chart in multicolor to make it more readeable
 Order your data by value 
 1. Ascending -> `True`
 2. Descending -> `False`
-3. Input order -> `None`
+3. Same as Input order -> `None`
 
 - Default value: `None`
 - Allowed Options: `True`, `False`, `None`
