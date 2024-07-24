@@ -70,10 +70,6 @@ RGB Gamer Legend:
 
 # Features
 
-<details>
-
-<summary> Keyword Arguments </summary>
-
 ### data: `dict[str, int]`
 Enter the data of the piechart
 
@@ -112,4 +108,4 @@ Order your data by value
 - Default value: `None`
 - Allowed Options: `True`, `False`, `None`
 - Optional: `YES`
-<\details>
+
